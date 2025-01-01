@@ -1,0 +1,78 @@
+[gd_scene load_steps=10 format=3 uid="uid://cjkm5pn3hfcsl"]
+
+[ext_resource type="PackedScene" uid="uid://d23msjeaie8xe" path="res://Objects/Player/player.tscn" id="1_fba2l"]
+[ext_resource type="PackedScene" uid="uid://bhxmvv7020dnv" path="res://Objects/FinishPoint/finishpoint.tscn" id="2_n30vx"]
+[ext_resource type="PackedScene" uid="uid://88ri5gysdr7" path="res://Ui/pause_menu.tscn" id="3_xwrab"]
+[ext_resource type="Script" path="res://Levels/timer.gd" id="4_n03t5"]
+[ext_resource type="PackedScene" uid="uid://dd6b2gcmifaoc" path="res://Ui/changelevelbutton.tscn" id="5_ahnuq"]
+[ext_resource type="PackedScene" uid="uid://ykfuvuy1a1cv" path="res://Levels/level1asset.tscn" id="5_h82rr"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_asopj"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_4w8ec"]
+sky_material = SubResource("ProceduralSkyMaterial_asopj")
+
+[sub_resource type="Environment" id="Environment_hj7qa"]
+background_mode = 2
+sky = SubResource("Sky_4w8ec")
+tonemap_mode = 2
+glow_enabled = true
+
+[node name="Level1" type="Node3D"]
+
+[node name="Environment" type="Node3D" parent="."]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Environment"]
+environment = SubResource("Environment_hj7qa")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Environment"]
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
+shadow_enabled = true
+
+[node name="Player" parent="." instance=ExtResource("1_fba2l")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.41176, 0)
+
+[node name="FinishPoint" parent="." instance=ExtResource("2_n30vx")]
+transform = Transform3D(1.38326, 0, 0, 0, 0.550679, 0, 0, 0, 1.43818, -0.710348, -5.25749, -27.8552)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="PauseMenu" parent="CanvasLayer" instance=ExtResource("3_xwrab")]
+metadata/_edit_use_anchors_ = true
+
+[node name="Panel" type="Panel" parent="CanvasLayer"]
+visible = false
+offset_right = 127.0
+offset_bottom = 24.0
+script = ExtResource("4_n03t5")
+
+[node name="Minutes" type="Label" parent="CanvasLayer/Panel"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+text = "00:"
+horizontal_alignment = 2
+
+[node name="Seconds" type="Label" parent="CanvasLayer/Panel"]
+layout_mode = 0
+offset_left = 40.0
+offset_right = 80.0
+offset_bottom = 23.0
+text = "00:"
+horizontal_alignment = 2
+
+[node name="Msec" type="Label" parent="CanvasLayer/Panel"]
+layout_mode = 0
+offset_left = 80.0
+offset_right = 120.0
+offset_bottom = 23.0
+text = "00"
+horizontal_alignment = 2
+
+[node name="Control" parent="CanvasLayer" instance=ExtResource("5_ahnuq")]
+visible = false
+
+[node name="Node3D" parent="." instance=ExtResource("5_h82rr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0508652, -1.14107, 0.294014)
