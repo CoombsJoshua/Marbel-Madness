@@ -8,7 +8,7 @@ public class LevelSelectPodium : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            levelSelectUI.SetActive(true);
+            Userinterface.Instance.OpenUI(OriginLabs.MenuType.LevelSelect);
         }
     }
 
@@ -17,6 +17,7 @@ public class LevelSelectPodium : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             levelSelectUI.SetActive(false);
+            Userinterface.Instance.OpenUI(OriginLabs.MenuType.None);
         }
     }
 }

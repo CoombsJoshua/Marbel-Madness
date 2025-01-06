@@ -1,13 +1,13 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ProgressionManager : MonoBehaviour
 {
     public static ProgressionManager Instance;
 
-    private int[] starsPerLevel; // Array to store stars per level
-    private int highestUnlockedLevel = 1;
+    private const string ProgressKeyPrefix = "Level_"; // Prefix for level completion keys
 
-    void Awake()
+    private void Awake()
     {
         if (Instance == null)
         {
@@ -18,52 +18,58 @@ public class ProgressionManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-
-        LoadProgress();
     }
 
-    public void SetStarsForLevel(int levelIndex, int stars)
+    /// <summary>
+    /// Marks a level as completed and unlocks the next level if applicable.
+    /// </summary>
+    /// <param name="currentLevel">The current level index.</param>
+    public void CompleteLevel(int currentLevel)
     {
-        starsPerLevel[levelIndex - 1] = Mathf.Clamp(stars, 0, 3);
-        SaveProgress();
+        if (!IsLevelCompleted(currentLevel))
+        {
+            // Mark the current level as completed
+            PlayerPrefs.SetInt(ProgressKeyPrefix + currentLevel, 1);
+
+            // Unlock the next level
+            PlayerPrefs.SetInt(ProgressKeyPrefix + (currentLevel + 1), 1);
+            PlayerPrefs.Save();
+
+            Debug.Log($"Level {currentLevel} completed. Level {currentLevel + 1} unlocked.");
+        }
     }
 
-    public int GetStarsForLevel(int levelIndex)
+    /// <summary>
+    /// Checks if a level is completed.
+    /// </summary>
+    /// <param name="levelIndex">The level index to check.</param>
+    /// <returns>True if the level is completed, false otherwise.</returns>
+    public bool IsLevelCompleted(int levelIndex)
     {
-        return starsPerLevel[levelIndex - 1];
+        return PlayerPrefs.GetInt(ProgressKeyPrefix + levelIndex, 0) == 1;
     }
 
+    /// <summary>
+    /// Checks if a level is unlocked.
+    /// </summary>
+    /// <param name="levelIndex">The level index to check.</param>
+    /// <returns>True if the level is unlocked, false otherwise.</returns>
     public bool IsLevelUnlocked(int levelIndex)
     {
-        return levelIndex <= highestUnlockedLevel;
+        return levelIndex == 1 || IsLevelCompleted(levelIndex - 1);
     }
 
-    public void UnlockNextLevel()
+    /// <summary>
+    /// Resets all level progress (for debugging/testing).
+    /// </summary>
+    public void ResetProgress()
     {
-        if (highestUnlockedLevel < starsPerLevel.Length)
+        for (int i = 1; i <= 100; i++) // Adjust range as per the number of levels
         {
-            highestUnlockedLevel++;
-            SaveProgress();
+            PlayerPrefs.DeleteKey(ProgressKeyPrefix + i);
         }
-    }
+        PlayerPrefs.Save();
 
-    private void SaveProgress()
-    {
-        PlayerPrefs.SetInt("HighestUnlockedLevel", highestUnlockedLevel);
-        for (int i = 0; i < starsPerLevel.Length; i++)
-        {
-            PlayerPrefs.SetInt($"Level{(i + 1)}Stars", starsPerLevel[i]);
-        }
-    }
-
-    private void LoadProgress()
-    {
-        highestUnlockedLevel = PlayerPrefs.GetInt("HighestUnlockedLevel", 1);
-        starsPerLevel = new int[20]; // Assuming `totalLevels` is predefined
-
-        for (int i = 0; i < starsPerLevel.Length; i++)
-        {
-            starsPerLevel[i] = PlayerPrefs.GetInt($"Level{(i + 1)}Stars", 0);
-        }
+        Debug.Log("All level progress reset.");
     }
 }

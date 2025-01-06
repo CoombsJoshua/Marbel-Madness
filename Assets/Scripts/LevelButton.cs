@@ -10,7 +10,7 @@ public class LevelButton : MonoBehaviour
 
     private int levelIndex;
 
-    public void Configure(int levelIndex, int starCount, bool isUnlocked, System.Action<int> onClickCallback)
+    public void Configure(int levelIndex, bool isUnlocked, System.Action<int> onClickCallback)
     {
         this.levelIndex = levelIndex;
 
@@ -20,15 +20,9 @@ public class LevelButton : MonoBehaviour
         // Set lock state
         lockIcon.SetActive(!isUnlocked);
 
-        // Update stars
-        for (int i = 0; i < stars.Length; i++)
-        {
-            stars[i].SetActive(i < starCount);
-        }
-
         // Add click listener
         GetComponent<Button>().onClick.AddListener(() => onClickCallback(levelIndex));
-
+        
         // Disable button if locked
         GetComponent<Button>().interactable = isUnlocked;
     }
