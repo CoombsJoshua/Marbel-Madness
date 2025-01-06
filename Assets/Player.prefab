@@ -122,7 +122,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1139892294051056167}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 1.15
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -259,6 +259,50 @@ MonoBehaviour:
         byte0059: 0
         byte0060: 0
         byte0061: 0
+  bounceIntensity: 5
+  bounceFalloff: 0.5
+  bounceCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: -0.16934434
+      outSlope: -0.16934434
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.26180813
+      value: 0.9556643
+      inSlope: -0.13668403
+      outSlope: -0.13668403
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.4745728
+      value: 0.9335317
+      inSlope: -0.076482244
+      outSlope: -0.076482244
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.9958496
+      value: 0.90802
+      inSlope: -0.048940755
+      outSlope: -0.048940755
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!114 &2562822213198642166
 MonoBehaviour:
   m_ObjectHideFlags: 0

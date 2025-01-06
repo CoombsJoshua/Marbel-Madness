@@ -32,6 +32,12 @@ public class MarbleMovement : NetworkBehaviour
     private bool grounded = false;
     private bool canMove = true;
     private bool levelFinish = false;
+
+      private float currentBounceForce;
+    [Header("Bounce Settings")]
+    public float bounceIntensity = 5.0f; // Initial bounce force
+    public float bounceFalloff = 0.5f; // Multiplier to reduce bounce each time
+    public AnimationCurve bounceCurve; // Custom falloff curve
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -46,6 +52,9 @@ public class MarbleMovement : NetworkBehaviour
         }
 
         
+        // Initialize bounce force
+        currentBounceForce = bounceIntensity;
+
         // Subscribe to username updates
         Username.OnValueChanged += OnUsernameChanged;
     }
@@ -221,10 +230,56 @@ private void ApplySettingsFromManager()
         rb.AddForce(movementDirection * movementSpeed * Time.fixedDeltaTime, ForceMode.Force);
     }
 
+private void Bounce()
+{
+    if (grounded)
+    {
+        // Calculate the bounce force using the curve and current bounce intensity
+        float normalizedBounce = bounceCurve.Evaluate(currentBounceForce / bounceIntensity);
+        float finalBounceForce = currentBounceForce * normalizedBounce;
+
+        if (finalBounceForce > 0.5f) // Only apply bounce if the force is significant
+        {
+            Debug.Log($"Bounce applied with force: {finalBounceForce}");
+            rb.AddForce(Vector3.up * finalBounceForce, ForceMode.Impulse);
+
+            // Reduce the bounce force for subsequent bounces
+            currentBounceForce *= bounceFalloff;
+
+            // Reset grounded to avoid multiple bounces
+            grounded = false;
+        }
+        else
+        {
+            // Reset the bounce force when it's too low
+            Debug.Log("Bounce force too low, resetting.");
+            currentBounceForce = bounceIntensity;
+        }
+    }
+}
+
+
     private void Jump()
     {
         rb.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
     }
+
+private void OnCollisionEnter(Collision collision)
+{
+    // Check if the collision is with the ground
+    if (Vector3.Dot(collision.contacts[0].normal, Vector3.up) > 0.5f)
+    {
+        // Only bounce if the relative velocity is significant
+        if (collision.relativeVelocity.magnitude > 1.0f)
+        {
+            Bounce();
+        }
+
+        // Mark the marble as grounded
+        grounded = true;
+    }
+}
+
 
     private void OnCollisionStay(Collision collision)
     {
