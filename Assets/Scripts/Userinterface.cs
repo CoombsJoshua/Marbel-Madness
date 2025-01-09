@@ -1,4 +1,4 @@
-using System.Diagnostics;
+
 using OriginLabs;
 using TMPro;
 using UnityEngine;
@@ -80,4 +80,36 @@ public class Userinterface : MonoBehaviour
     public void OpenMainMenu(){
         m_CanvasManager.SwitchCanvas(MenuType.MainMenu);
     }
+
+    #region  Marble
+
+        [Header("References")]
+    public Renderer marbleRenderer; // Reference to the marble's renderer
+    public MarbleCosmeticsDatabase cosmeticsDatabase; // Reference to the cosmetics database
+
+    private int currentCosmeticID; // Tracks the currently applied cosmetic
+
+
+    public void ApplyCosmetic(int cosmeticID)
+    {
+        if(marbleRenderer== null) return;
+        MarbleCosmetic cosmetic = cosmeticsDatabase.Cosmetics.Find(c => c.ID == cosmeticID);
+
+        if (cosmetic != null)
+        {
+            currentCosmeticID = cosmeticID;
+            marbleRenderer.material.mainTexture = cosmetic.Texture;
+            Debug.Log($"Applied cosmetic: {cosmetic.Name}");
+        }
+        else
+        {
+            Debug.LogWarning($"Cosmetic with ID {cosmeticID} not found in the database.");
+        }
+    }
+
+    public MarbleCosmetic GetCurrentCosmetic()
+    {
+        return cosmeticsDatabase.Cosmetics.Find(c => c.ID == currentCosmeticID);
+    }
+    #endregion
 }

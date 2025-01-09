@@ -28,6 +28,16 @@ public class MarbleMovement : NetworkBehaviour
     public NetworkVariable<FixedString64Bytes> Username = new NetworkVariable<FixedString64Bytes>(
         default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner
     );
+
+        [Header("Customization")]
+    public NetworkVariable<int> CosmeticID = new NetworkVariable<int>(
+        default,
+        NetworkVariableReadPermission.Everyone, // Everyone can read
+        NetworkVariableWritePermission.Owner   // Only the owner can write
+    );
+
+    public Renderer marbleRenderer;
+
     private Rigidbody rb;
     private bool grounded = false;
     private bool canMove = true;
@@ -51,7 +61,14 @@ public class MarbleMovement : NetworkBehaviour
             cameraTransform = Camera.main.transform;
         }
 
-        
+                // Apply the current cosmetic when the marble is initialized
+        CosmeticID.OnValueChanged += OnCosmeticIDChanged;
+
+        // If already initialized, apply the current cosmetic
+        if (CosmeticID.Value != 0)
+        {
+            ApplyCosmetic(CosmeticID.Value);
+        }
         // Initialize bounce force
         currentBounceForce = bounceIntensity;
 
@@ -76,6 +93,10 @@ public class MarbleMovement : NetworkBehaviour
             {
                 Debug.LogError("No Camera.main found in the scene!");
             }
+
+                    // Set the cosmetic to the locally selected cosmetic
+        int selectedCosmeticID = Userinterface.Instance.GetCurrentCosmetic().ID;
+        SetCosmetic(selectedCosmeticID);
         }
 
         if (!marbleMaterial)
@@ -99,7 +120,8 @@ public class MarbleMovement : NetworkBehaviour
         {
             nameTag.text = Username.Value.ToString();
         }
-
+    // Apply the currently assigned cosmetic
+    ApplyCosmetic(CosmeticID.Value);
   
     }
 
@@ -108,6 +130,47 @@ public class MarbleMovement : NetworkBehaviour
         LevelIndex.OnValueChanged -= OnLevelIndexChanged;
 
         Username.OnValueChanged -= OnUsernameChanged;
+
+        CosmeticID.OnValueChanged -= OnCosmeticIDChanged;
+    }
+
+    private void OnCosmeticIDChanged(int oldValue, int newValue)
+    {
+        ApplyCosmetic(newValue);
+    }
+
+    public void ApplyCosmetic(int cosmeticID)
+    {
+        MarbleCosmetic cosmetic = Userinterface.Instance.cosmeticsDatabase.Cosmetics.Find(c => c.ID == cosmeticID);
+
+        if (cosmetic != null && marbleRenderer != null)
+        {
+            marbleRenderer.material.mainTexture = cosmetic.Texture;
+            Debug.Log($"Applied cosmetic: {cosmetic.Name}");
+        }
+        else
+        {
+            Debug.LogWarning($"Cosmetic with ID {cosmeticID} not found or marbleRenderer is null.");
+        }
+    }
+
+    [ServerRpc]
+    public void SetCosmeticIDServerRpc(int cosmeticID)
+    {
+        if (IsServer)
+        {
+            CosmeticID.Value = cosmeticID; // Sync the cosmetic ID across the network
+        }
+    }
+
+    public void SetCosmetic(int cosmeticID)
+    {
+        if (IsOwner)
+        {
+            // Update locally and notify the server
+            CosmeticID.Value = cosmeticID;
+            SetCosmeticIDServerRpc(cosmeticID);
+        }
     }
 
     private void OnUsernameChanged(FixedString64Bytes oldValue, FixedString64Bytes newValue)

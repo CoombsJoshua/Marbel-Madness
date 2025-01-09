@@ -71,6 +71,8 @@ namespace OriginLabs
 
             // Instantiate and position the marble in the menu
             displayedMarbleInstance = Instantiate(Marble, MarbleDisplayPosition.position, MarbleDisplayPosition.rotation);
+
+            Userinterface.Instance.marbleRenderer = displayedMarbleInstance.GetComponent<Renderer>();
         }
 
         private string GenerateRandomUsername()
