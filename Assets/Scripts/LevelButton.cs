@@ -6,7 +6,7 @@ public class LevelButton : MonoBehaviour
 {
     public TextMeshProUGUI levelText;
     public GameObject lockIcon;
-    public GameObject[] stars; // Array of star GameObjects
+
 
     private int levelIndex;
 
@@ -18,12 +18,12 @@ public class LevelButton : MonoBehaviour
         levelText.text = $"Level {levelIndex}";
 
         // Set lock state
-        lockIcon.SetActive(!isUnlocked);
+       // lockIcon.SetActive(!isUnlocked);
 
         // Add click listener
         GetComponent<Button>().onClick.AddListener(() => onClickCallback(levelIndex));
         
         // Disable button if locked
-        GetComponent<Button>().interactable = isUnlocked;
+        //GetComponent<Button>().interactable = isUnlocked;
     }
 }

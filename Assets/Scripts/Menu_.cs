@@ -14,6 +14,8 @@ namespace OriginLabs
         Teleporting,
 
         MainMenu,
+
+        MarbleMenu,
     }
 
     public abstract class Menu_ : MonoBehaviour

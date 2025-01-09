@@ -116,7 +116,7 @@ public class LevelManager : MonoBehaviour
 /// <param name="levelIndex">The index of the level to teleport to.</param>
 public void TeleportPlayerToLevel(GameObject player, int levelIndex)
 {
-    if (levelIndex < 0 || levelIndex >= pathPoints.Count)
+    if (levelIndex < 0 || levelIndex >= levels.Length)
     {
         Debug.LogError("Invalid level index!");
         return;
@@ -129,7 +129,7 @@ public void TeleportPlayerToLevel(GameObject player, int levelIndex)
         // Reset the player's position to the spawn point
         Debug.Log($"Teleporting player {player.name} to level {levelIndex} at position {spawnPoint.position}");
         player.transform.position = spawnPoint.position;
-
+        player.GetComponent<MarbleMovement>().SetLevelIndex(levelIndex);
         // Reset momentum
         Rigidbody rb = player.GetComponent<Rigidbody>();
         if (rb != null)

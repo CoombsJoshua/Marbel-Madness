@@ -100,11 +100,11 @@ buttonScript.Configure(levelIndex,
     }
 public void ConnectToLevel(int levelIndex)
 {
-    if (!ProgressionManager.Instance.IsLevelUnlocked(levelIndex))
-    {
-        Debug.LogWarning("Level is locked!");
-        return;
-    }
+    // if (!ProgressionManager.Instance.IsLevelUnlocked(levelIndex))
+    // {
+    //     Debug.LogWarning("Level is locked!");
+    //     return;
+    // }
     Debug.Log("Connecting to:: " + levelIndex);
     var player = NetworkManager.Singleton.LocalClient.PlayerObject;
     if (player != null)

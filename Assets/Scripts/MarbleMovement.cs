@@ -238,7 +238,7 @@ private void Bounce()
         float normalizedBounce = bounceCurve.Evaluate(currentBounceForce / bounceIntensity);
         float finalBounceForce = currentBounceForce * normalizedBounce;
 
-        if (finalBounceForce > 0.5f) // Only apply bounce if the force is significant
+        if (finalBounceForce > 1.5f) // Only apply bounce if the force is significant
         {
             Debug.Log($"Bounce applied with force: {finalBounceForce}");
             rb.AddForce(Vector3.up * finalBounceForce, ForceMode.Impulse);
@@ -410,6 +410,12 @@ private void OnCollisionEnter(Collision collision)
         Debug.Log("Next Level Is: " + nextLevelIndex);
         if(IsOwner){
             LevelIndex.Value = nextLevelIndex;
+        }
+    }
+
+    public void SetLevelIndex(int value){
+                if(IsOwner){
+            LevelIndex.Value = value;
         }
     }
 }

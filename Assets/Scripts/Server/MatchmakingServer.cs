@@ -20,7 +20,7 @@ public class MatchmakingServer : MonoBehaviour
     }
 
     void Start(){
-        MatchmakingServer.Instance.RegisterServer("Level01", "127.0.0.1", 7777, 0, 100);
+        MatchmakingServer.Instance.RegisterServer("Level01", "104.207.129.116", 7777, 0, 100);
                 MatchmakingServer.Instance.RegisterServer("Level02", "127.0.0.1", 7778, 0, 100);
     }
 

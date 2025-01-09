@@ -50,7 +50,7 @@ namespace OriginLabs
         private void UpdateCursorState()
         {
             // Check if the active menu is a menu type where the cursor should be visible
-            if (m_ActiveCanvasType == MenuType.LevelSelect || m_ActiveCanvasType == MenuType.Teleporting || m_ActiveCanvasType == MenuType.MainMenu)
+            if (m_ActiveCanvasType == MenuType.LevelSelect || m_ActiveCanvasType == MenuType.Teleporting || m_ActiveCanvasType == MenuType.MainMenu || m_ActiveCanvasType == MenuType.MarbleMenu)
             {
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;

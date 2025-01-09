@@ -39,7 +39,8 @@ public class Userinterface : MonoBehaviour
             // Check if the active canvas is LevelSelect or Teleporting
             Player_Runtime.IsInMenu = 
                 m_CanvasManager.activeCanvasType == MenuType.LevelSelect ||
-                m_CanvasManager.activeCanvasType == MenuType.Teleporting;
+                m_CanvasManager.activeCanvasType == MenuType.Teleporting ||
+                m_CanvasManager.activeCanvasType == MenuType.MarbleMenu;
         }
         else
         {
@@ -71,5 +72,12 @@ public class Userinterface : MonoBehaviour
         {
             UnityEngine.Debug.LogError("CanvasManager is not assigned in Userinterface.");
         }
+    }
+
+    public void OpenMarbleMenu(){
+        m_CanvasManager.SwitchCanvas(MenuType.MarbleMenu);
+    }
+    public void OpenMainMenu(){
+        m_CanvasManager.SwitchCanvas(MenuType.MainMenu);
     }
 }
